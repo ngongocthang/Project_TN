@@ -19,8 +19,16 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'thumbnail',
         'password',
+        'phone',
+        'role',
     ];
+
+    // relationship
+    public function orders () {
+        return $this->belongsTo(Order::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
