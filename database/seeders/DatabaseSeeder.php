@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\UserMeta;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -18,11 +19,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->count(10)->create();
-        Category::factory()->count(10)->create();
-        Product::factory()->count(10)->create();
-        Order::factory()->count(10)->create();
-        OrderItem::factory()->count(10)->create();
-        Blog::factory()->count(10)->create();
+        User::factory()->count(5)->create();
+        Category::factory()->count(5)->create();
+        Product::factory()->count(20)->create();
+        Order::factory()->count(5)->create();
+        OrderItem::factory()->count(5)->create();
+        Blog::factory()->count(6)->create();
+        UserMeta::factory()->count(5)->create();
     }
 }

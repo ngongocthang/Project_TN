@@ -19,15 +19,17 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'thumbnail',
-        'password',
-        'phone',
-        'role',
+        'password'
     ];
 
     // relationship
     public function orders () {
-        return $this->belongsTo(Order::class);
+        return $this->hasMany(Order::class);
+    }
+
+    // relationship
+    public function userMetas () {
+        return $this->hasMany(UserMeta::class);
     }
 
     /**
