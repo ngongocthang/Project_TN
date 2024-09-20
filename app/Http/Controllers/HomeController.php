@@ -79,11 +79,18 @@ class HomeController extends Controller
                 if (count($priceRange) === 2) {
                     $query->whereBetween('price', [$priceRange[0], $priceRange[1]]);
                 } else {
-                    return response()->json(['error' => 'Invalid price range'], 400);
+                    return ("Invalid price range");
+                    // return response()->json(['error' => 'Invalid price range'], 400);
                 }
             }
 
-            // filter by name
+            // filter by name/created_at
+            if ($request->has('option')) {
+                $optionRanger = $request->input('option') === '' ? 'name' : 'created_at';
+                $query->orderBy('name', $optionRanger);
+            }
+
+            // filter order
             if ($request->has('sort')) {
                 $sortOrder = $request->input('sort') === 'asc' ? 'asc' : 'desc';
                 $query->orderBy('name', $sortOrder);
@@ -122,7 +129,7 @@ class HomeController extends Controller
             ];
         }
         session()->put('like', $like);
-        return redirect()->back()->with('success', ' Đã thêm sản phẩm vào thích!');
+        return redirect()->back()->with('success', ' Add wishlist success!');
     }
 
     /**

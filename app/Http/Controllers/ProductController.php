@@ -30,9 +30,22 @@ class ProductController extends Controller
             // filter by price
             if ($request->has('price')) {
                 $priceRange = explode('-', $request->input('price'));
-                $query->whereBetween('price', [$priceRange[0], $priceRange[1]]);
+                // check
+                if (count($priceRange) === 2) {
+                    $query->whereBetween('price', [$priceRange[0], $priceRange[1]]);
+                } else {
+                    return ("Invalid price range");
+                    // return response()->json(['error' => 'Invalid price range'], 400);
+                }
             }
-            // filter by name
+
+            // filter by name/created_at
+            if ($request->has('option')) {
+                $optionRanger = $request->input('option') === '' ? 'name' : 'created_at';
+                $query->orderBy('name', $optionRanger);
+            }
+
+            // filter order
             if ($request->has('sort')) {
                 $sortOrder = $request->input('sort') === 'asc' ? 'asc' : 'desc';
                 $query->orderBy('name', $sortOrder);
@@ -40,7 +53,8 @@ class ProductController extends Controller
 
             $products = $query->paginate(12);
 
-            return view('filter', compact('products'));
+            return view('product', compact('products'));
+            // return response()->json($products);
         } catch (Throwable $e) {
             return $e;
         }
