@@ -10,21 +10,23 @@ class Product extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'description', 
-        'image', 
+        'description',
+        'image',
         'quantity',
-        'price', 
-        'status', 
-        'view', 
+        'price',
+        'status',
+        'view',
         'category_id'
     ];
 
     //relationship 
-    public function category(){
+    public function category()
+    {
         return $this->belongsTo(Category::class);
     }
 
-    public function orderItems(){
+    public function orderItems()
+    {
         return $this->hasMany(OrderItem::class);
     }
 }

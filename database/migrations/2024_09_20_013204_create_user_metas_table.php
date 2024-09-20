@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('user_metas', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 6)->unique();
-            $table->string('status');
+            $table->string('thumbnail')->nullable();
+            $table->integer('phone');
+            $table->string('address');
+            $table->enum('role', ['admin', 'manager', 'staff', 'user'])->default('user');
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');            
+            $table->foreign('user_id')->references('id')->on('users'); 
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('user_metas');
     }
 };

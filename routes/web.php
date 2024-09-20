@@ -1,62 +1,49 @@
 <?php
 
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+//home
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/filter', [HomeController::class, 'filter'])->name('filter-search');
+Route::get('/detail-product/{id}', [HomeController::class, 'detail'])->name('detail-product');
+Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+Route::get('/about', [HomeController::class, 'about'])->name('about');
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+// add to cart
+Route::post('/add-to-cart/{id}', [CartController::class, 'addToCart'])->name('add-to-cart');
+Route::get('/page-cart', [CartController::class, 'showCart'])->name('page-cart');
+Route::delete('/delete-cart/{id}', [CartController::class, 'deleteCart'])->name('delete-cart');
+Route::put('/update-cart/{id}', [CartController::class, 'updateCart'])->name('update-cart');
 
-Route::get('/product', function () {
-    return view('products.product');
-})->name('product');
+// like
+Route::get('/wishlist/{id}', [HomeController::class, 'wishlist'])->name('wishlist');
+Route::get('/page-wishlist', [HomeController::class, 'deleteWishlist'])->name('page-wishlist');
+Route::delete('/delete-wishlist/{id}', [HomeController::class, 'deleteWishlist'])->name('delete-wishlist');
 
-Route::get('/detail', function () {
-    return view('products.detail');
-})->name('detail');
+//checkout
+Route::get('/checkout-page', [CartController::class, 'showCartCheckout'])->name('checkout-page');
+Route::post('/checkout', [CartController::class, 'handleCheckout'])->name('checkout');
 
-Route::get('/blog', function () {
-    return view('blog');
-})->name('blog');
+//product
+Route::get('/products', [ProductController::class, 'index'])->name('products');
+Route::get('/filter-products', [ProductController::class, 'filter'])->name('filter-products');
+Route::get('/search-products', [ProductController::class, 'search'])->name('search-products');
 
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact');
+//category
+Route::get('/categories/{id}', [CategoryController::class, 'index'])->name('categories');
+Route::get('/filter-categories', [CategoryController::class, 'filter'])->name('filter-categories');
+Route::get('/search-categories', [CategoryController::class, 'search'])->name('search-categories');
 
-Route::get('/about', function () {
-    return view('about');
-})->name('about');
-
-Route::get('/category', function () {
-    return view('category');
-})->name('category');
-
-Route::get('/checkout', function () {
-    return view('mycart.checkout');
-})->name('checkout');
-
-Route::get('/shopping-cart', function () {
-    return view('mycart.shopping-cart');
-})->name('shopping-cart ');
-
-Route::get('/wishlist', function () {
-    return view('mycart.wishlist');
-})->name('wishlist');
-
-Route::get('/search', function () {
-    return view('search');
-})->name('search');
-
-Route::get('/404', function () {
-    return view('404');
-})->name('404');
+// admin
+Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\admin\HomeController::class, 'index'])->name('dashboard-admin');
+    Route::resource('products', App\Http\Controllers\admin\ProductController::class, ['names' => 'products']);
+    Route::resource('categories', App\Http\Controllers\admin\CategoryController::class, ['names' => 'categories']);
+    Route::resource('orders', App\Http\Controllers\admin\OrderController::class, ['names' => 'orders']);
+    Route::resource('order-items', App\Http\Controllers\admin\OrderItemController::class, ['names' => 'order-items']);
+    Route::resource('users', App\Http\Controllers\admin\UserController::class, ['names' => 'users']);
+}); 

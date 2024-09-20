@@ -19,8 +19,6 @@ class OrderFactory extends Factory
         return [
             'code' => fake()->lexify('O?????'),
             'status' => fake()->randomElement(['pending', 'paid', 'canceled']),
-            'address' => fake()->address(), 
-            'total_amount' => fake()->randomDigit(),
             'user_id' => 1,
 
         ];

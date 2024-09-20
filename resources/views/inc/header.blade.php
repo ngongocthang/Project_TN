@@ -66,15 +66,10 @@
                                         <input type="text" name="s" class="input-text" value="" placeholder="Search here...">
                                         <select name="category">
                                             <option value="-1" selected>All Categories</option>
-                                            <option value="vegetables">Vegetables</option>
-                                            <option value="fresh_berries">Fresh Berries</option>
-                                            <option value="ocean_foods">Ocean Foods</option>
-                                            <option value="butter_eggs">Butter & Eggs</option>
-                                            <option value="fastfood">Fastfood</option>
-                                            <option value="fresh_meat">Fresh Meat</option>
-                                            <option value="fresh_onion">Fresh Onion</option>
-                                            <option value="papaya_crisps">Papaya & Crisps</option>
-                                            <option value="oatmeal">Oatmeal</option>
+                                            @foreach($categoryList as $category)
+                                            <option value="vegetables">{{$category->name}}</option>
+                                            @endforeach
+                                            
                                         </select>
                                         <button type="submit" class="btn-submit">go</button>
                                     </form>
@@ -243,12 +238,15 @@
                                     <span class="line-2"></span>
                                     <span class="line-3"></span>
                                 </span>
-                                <span class="menu-title">All departments</span>
+                                <span class="menu-title">All Categories</span>
                                 <span class="angle" data-tgleclass="fa fa-caret-down"><i class="fa fa-caret-up" aria-hidden="true"></i></span>
                             </div>
                             <div class="wrap-menu">
                                 <ul class="menu clone-main-menu">
-                                    <li class="menu-item"><a href="#" class="menu-title"><i class="biolife-icon icon-fresh-juice"></i>Fresh Bananas & Plantains</a></li>
+                                    @foreach($categoryList as $category)
+                                    <!-- <i class="biolife-icon icon-fresh-juice"></i> -->
+                                    <li class="menu-item"><a href="#" class="menu-title">{{$category->name}}</a></li>
+                                    @endforeach
                                 </ul>
                             </div>
                         </div>
