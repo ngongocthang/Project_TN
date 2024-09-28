@@ -22,9 +22,9 @@ class CategoryRequest extends FormRequest
         public function rules(): array
         {
             return [
-                'name' => 'required|regex:/^[A-Za-z\s]+$/|max:45',
+                'name' => 'required|regex:/^[^\d]+$/|max:45',
                 'description' => 'required|max:100',
-                'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
             ];
         }
 
@@ -36,6 +36,7 @@ class CategoryRequest extends FormRequest
             'name.max' => 'Name must not exceed 45 characters!',
             'description.required' => 'Description cannot be empty!',
             'description.max' => 'Description must not exceed 100 characters!',
+            'image.required' => 'Image cannot be empty!',
             'image.image' => 'The uploaded file must be an image!',
             'image.mimes' => 'Only image file formats (jpeg, png, jpg, gif, svg) are allowed!',
             'image.max' => 'Image must not exceed 2048 characters!',

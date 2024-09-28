@@ -18,9 +18,9 @@ class UserMetaFactory extends Factory
     {
         return [
             'thumbnail' => fake()->image(),
-            'phone' => fake()->randomDigit(),
+            'phone' => fake()->e164PhoneNumber(),
             'address' => fake()->address(), 
-            'role' => fake()->randomElement(['user', 'staff', 'manager', 'admin']),
+            'role' => fake()->randomElement(['user', 'staff', 'manager']),
             'user_id' => 1
         ];
     }

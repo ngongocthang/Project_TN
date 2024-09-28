@@ -14,11 +14,14 @@ return new class extends Migration
         Schema::create('user_metas', function (Blueprint $table) {
             $table->id();
             $table->string('thumbnail')->nullable();
-            $table->integer('phone');
-            $table->string('address');
-            $table->enum('role', ['admin', 'manager', 'staff', 'user'])->default('user');
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users'); 
+            $table->string('phone')->nullable();
+            $table->string('address')->nullable();
+            $table->enum('role', ['manager', 'staff', 'user'])->default('user');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('cascade');      
             $table->timestamps();
         });
     }

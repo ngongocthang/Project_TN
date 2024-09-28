@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\OrderEditRequest;
 use App\Models\Order;
+use App\Models\UserMeta;
 use Throwable;
 
 class OrderController extends Controller
@@ -35,6 +38,45 @@ class OrderController extends Controller
         }
     }
 
+
+    /**
+     * Tra ve giao dien trang cap nhat 
+     */
+    public function edit(string $id)
+    {
+        try {
+            $order = Order::findOrFail($id);
+
+            return view('admin.orders.edit', compact('order'));
+        } catch (Throwable $e) {
+            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
+            return redirect()->back();
+        }
+    }
+
+    /**
+     * ham xu li cap nhat.
+     */
+    public function update(OrderEditRequest $request, string $id)
+    {
+        try {
+            $validated = $request->validated();
+            $order = Order::findOrFail($id);
+
+            if ($order) {
+                $order->update($validated);
+
+                toastr()->timeOut(7000)->closeButton()->addSuccess('Order Updated Successfully!');
+                return redirect()->back()->with('message-success', 'Success');
+            }
+            toastr()->timeOut(7000)->closeButton()->addError('Order Updated Fail!');
+            return redirect()->back();
+        } catch (Throwable $e) {
+            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
+            return redirect()->back();
+        }
+    }
+
     /**
      * Ham xu li xoa
      */
@@ -42,9 +84,10 @@ class OrderController extends Controller
     {
         try {
             $order = Order::findOrFail($id);
-            $order->orderItems()->delete();
-            $order->delete($id);
-            if($order){
+
+            if ($order) {
+                $order->delete($id);
+
                 toastr()->timeOut(7000)->closeButton()->addSuccess('Order Delete Successfully!');
                 return redirect()->back();
             }
