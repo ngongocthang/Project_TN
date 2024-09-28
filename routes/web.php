@@ -39,11 +39,14 @@ Route::get('/filter-categories', [CategoryController::class, 'filter'])->name('f
 Route::get('/search-categories', [CategoryController::class, 'search'])->name('search-categories');
 
 // admin
-Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
-    Route::get('/dashboard', [App\Http\Controllers\admin\HomeController::class, 'index'])->name('dashboard-admin');
-    Route::resource('products', App\Http\Controllers\admin\ProductController::class, ['names' => 'products']);
-    Route::resource('categories', App\Http\Controllers\admin\CategoryController::class, ['names' => 'categories']);
-    Route::resource('orders', App\Http\Controllers\admin\OrderController::class, ['names' => 'orders']);
-    Route::resource('order-items', App\Http\Controllers\admin\OrderItemController::class, ['names' => 'order-items']);
-    Route::resource('users', App\Http\Controllers\admin\UserController::class, ['names' => 'users']);
+Route::prefix('dashboard')->group(function () {
+    Route::get('/', [App\Http\Controllers\Admin\HomeController::class, 'index'])->name('dashboard');
+    Route::resource('products', App\Http\Controllers\Admin\ProductController::class, ['names' => 'dashboard.products']);
+    Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class, ['names' => 'dashboard.categories']);
+    Route::resource('orders', App\Http\Controllers\Admin\OrderController::class, ['names' => 'dashboard.orders']);
+    Route::resource('order-items', App\Http\Controllers\Admin\OrderItemController::class, ['names' => 'dashboard.order-items']);
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class, ['names' => 'dashboard.users']);
+    Route::get('user-metas', [App\Http\Controllers\Admin\UserMetaController::class, 'show'])->name('dashboard.user-metas');
+    Route::resource('blogs', App\Http\Controllers\Admin\BlogController::class,  ['names' => 'dashboard.blogs']);
+    Route::resource('product-solds', App\Http\Controllers\Admin\ProductSoldController::class, ['names' => 'dashboard.product-solds']);
 }); 

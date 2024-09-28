@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\UserMeta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Throwable;
@@ -107,19 +108,26 @@ class CartController extends Controller
     public function handleCheckout(Request $request)
     {
         try {
-            $value = $request->only(['user_id', 'name', 'email', 'address', 'phone', 'total_amount']);
+            $value = $request->only(['user_id', 'address', 'phone']);
 
             if ($value['address'] == null || $value['phone'] == null) {
                 return redirect()->back()->with('warning', 'Please enter complete information!');
             } else {
-                // Create the order
+                // Save the order
                 $order = Order::create($request->only([
-                    'address',
-                    'total_amount',
                     'user_id'
                 ]));
-                //Reference(tham chiếu) to orderItems
+                // update or create the userMeta
+                 UserMeta::updateOrCreate(
+                    ['user_id' => $value['user_id']],// tim trong userMeta co user_id = $value['user_id']
+                    [
+                        'address' => $value['address'],
+                        'phone' => $value['phone'],
+                    ]
+                );
+        
                 $cart = session()->get('cart');
+                //Reference(tham chiếu) to orderItems
                 foreach ($cart as $item) {
                     $order->orderItems()->create([
                         'product_id' => $item['id'],

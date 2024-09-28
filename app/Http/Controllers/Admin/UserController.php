@@ -1,22 +1,25 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\UserEditRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Models\UserMeta;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
 
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * index
      */
     public function index()
     {
         try {
             $users = User::paginate(10);
+
             return view('admin.users.index', compact('users'));
         } catch (Throwable $e) {
             toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
@@ -43,36 +46,34 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         try {
-            $validatedData = $request->validated();
-            if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('users', 'public');
-                $user = User::create([
-                    'image' => $imagePath,
-                    'name' => $validatedData['name'],
-                    'email' => $validatedData['email'],
-                    'password' => $validatedData['password'],
-                    'phone' => $validatedData['phone'],
-                    'role' => $validatedData['role'],
+            $validated = $request->validated();
+            $user = User::create($validated);
+
+            if ($request->hasFile('thumbnail')) {
+                $imagePath = $request->file('thumbnail')->store('user-meta', 'public');
+                UserMeta::create([
+                    'thumbnail' => $imagePath,
+                    'phone' => $validated['phone'],
+                    'role' => $validated['role'],
+                    'user_id' => $user->id,
                 ]);
-            }else{
-                $user = User::create([
-                    'name' => $validatedData['name'],
-                    'email' => $validatedData['email'],
-                    'password' => $validatedData['password'],
-                    'phone' => $validatedData['phone'],
-                    'role' => $validatedData['role'],
+            } else {
+                UserMeta::create([
+                    'phone' => $validated['phone'],
+                    'role' => $validated['role'],
+                    'user_id' => $user->id
                 ]);
             }
+
             if ($user) {
                 toastr()->timeOut(7000)->closeButton()->addSuccess('User Created Successfully!');
                 return redirect()->back()->with('message-success', 'Success');
             }
-
             toastr()->timeOut(7000)->closeButton()->addError('User Created Fail!');
             return redirect()->back();
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            // toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
+            return $e->getMessage();
         }
     }
 
@@ -97,6 +98,7 @@ class UserController extends Controller
     {
         try {
             $user = User::findOrFail($id);
+
             return view('admin.users.edit', compact('user'));
         } catch (Throwable $e) {
             toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
@@ -107,40 +109,43 @@ class UserController extends Controller
     /**
      * ham xu li cap nhat.
      */
-    public function update(UserRequest $request, string $id)
+    public function update(UserEditRequest $request, string $id)
     {
         try {
+            $validated = $request->validated();
             $user = User::findOrFail($id);
-            $validatedData = $request->validated();
-            if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('users', 'public');
-                if ($user->image) {
-                    Storage::disk('public')->delete($user->image);
+            $userMeta = UserMeta::where('user_id', $id)->firstOrFail();
+
+            if ($request->hasFile('thumbnail')) {
+                $imagePath = $request->file('thumbnail')->store('user-meta', 'public');
+                if ($userMeta->thumbnail) {
+                    Storage::disk('public')->delete($userMeta->thumbnail);
                 }
-                $user->image = $imagePath;
-                $user->update([
-                    'image' => $imagePath,
-                    'name' => $validatedData['name'],
-                    'email' => $validatedData['email'],
-                    'password' => $validatedData['password'],
-                    'phone' => $validatedData['phone'],
-                    'role' => $validatedData['role'],
-                ]);
-                $user->save();
+                $userMeta->thumbnail = $imagePath;
             } else {
-                $user->update([
-                    'name' => $validatedData['name'],
-                    'email' => $validatedData['email'],
-                    'password' => $validatedData['password'],
-                    'phone' => $validatedData['phone'],
-                    'role' => $validatedData['role'],
-                ]);
-                $user->save();
+                $imagePath = $request->old_thumbnail;
             }
 
+            if ($validated["address"] != null) {
+                $userMeta->update([
+                    'thumbnail' => $imagePath,
+                    'phone' => $validated['phone'],
+                    'role' => $validated['role'],
+                    'address' => $validated['address']
+                ]);
+            } else {
+                $userMeta->update([
+                    'thumbnail' => $imagePath,
+                    'phone' => $validated['phone'],
+                    'role' => $validated['role']
+                ]);
+            }
+            
+            $userMeta->save();
+            $user->update($validated);
             if ($user) {
                 toastr()->timeOut(7000)->closeButton()->addSuccess('User Updated Successfully!');
-                return redirect()->back()->with('message-success', 'Success');
+                return redirect()->back()->with('message-success', 'Success');;
             }
             toastr()->timeOut(7000)->closeButton()->addError('User Updated Fail!');
             return redirect()->back();
@@ -150,7 +155,6 @@ class UserController extends Controller
         }
     }
 
-
     /**
      * Ham xu li xoa
      */
@@ -159,7 +163,6 @@ class UserController extends Controller
         try {
             $user = User::findOrFail($id);
             if ($user) {
-                $user->orders()->delete();
                 $user->delete();
                 toastr()->timeOut(7000)->closeButton()->addSuccess('User Delete Successfully!');
                 return redirect()->back();
