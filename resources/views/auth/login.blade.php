@@ -1,47 +1,83 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@extends('layout')
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+@section('title', 'Login Page')
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+@section('content')
+
+    <!-- Preloader -->
+    <div id="biof-loading">
+        <div class="biof-loading-center">
+            <div class="biof-loading-center-absolute">
+                <div class="dot dot-one"></div>
+                <div class="dot dot-two"></div>
+                <div class="dot dot-three"></div>
+            </div>
         </div>
+    </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+    <!-- Hero Section -->
+    <div class="hero-section hero-background">
+        <h1 class="page-title">Login</h1>
+    </div>
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+    <!-- Navigation section -->
+    <div class="container">
+        <nav class="biolife-nav">
+            <ul>
+                <li class="nav-item"><a href="{{ route('home') }}" class="permal-link">Home</a></li>
+                <li class="nav-item"><span class="current-page">Login</span></li>
+            </ul>
+        </nav>
+    </div>
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+    <div class="page-contain login-page">
+        <!-- Main content -->
+        <div id="main-content" class="main-content">
+            <div class="container">
+                <div class="row">
+                    <!-- Form Sign In -->
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <div class="signin-container">
+                            <form method="POST" action="{{ route('login') }}">
+                                @csrf
+                                <p class="form-row">
+                                    <label for="email">Email Address:<span class="requite">*</span></label>
+                                    <input type="email" id="email" name="email" value="{{ old('email') }}" class="txt-input" required autofocus autocomplete="username">
+                                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                                </p>
+                                <p class="form-row">
+                                    <label for="password">Password:<span class="requite">*</span></label>
+                                    <input type="password" id="password" name="password" class="txt-input" required autocomplete="current-password">
+                                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                                </p>
+                                <p class="form-row wrap-btn">
+                                    <button class="btn btn-submit btn-bold" type="submit">Sign In</button>
+                                    <a href="{{ route('password.request') }}" class="link-to-help">Forgot your password?</a>
+                                </p>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Go to Register form -->
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <div class="register-in-container">
+                            <div class="intro">
+                                <h4 class="box-title">New Customer?</h4>
+                                <p class="sub-title">Create an account with us and you’ll be able to:</p>
+                                <ul class="lis">
+                                    <li>Check out faster</li>
+                                    <li>Save multiple shipping addresses</li>
+                                    <li>Access your order history</li>
+                                    <li>Track new orders</li>
+                                    <li>Save items to your Wishlist</li>
+                                </ul>
+                                <a href="{{ route('register') }}" class="btn btn-bold">Create an account</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+@endsection

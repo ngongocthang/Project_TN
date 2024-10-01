@@ -3,16 +3,29 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Throwable;
 
 class HomeController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * view dashboard.
      */
     public function index()
     {
-        //
+        try {
+            $products = Product::all()->count();
+            $categories = Category::all()->count();
+            $user = User::all()->count();
+
+            return view('admin.index', compact('products', 'categories', 'user'));
+        } catch (Throwable $e) {
+            return ('An error occurred: ' . $e->getMessage());
+        }
     }
 
     /**

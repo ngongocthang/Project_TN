@@ -20,7 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'thumbnail'
+        'thumbnail',
     ];
 
     // relationship
@@ -28,10 +28,14 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
-    // relationship
-    public function userMetas () {
-        return $this->hasMany(UserMeta::class);
+   // relationship
+    // public function userMetas () {
+    //     return $this->hasMany(UserMeta::class);
+    // }
+    public function userMeta() {
+        return $this->hasOne(UserMeta::class);
     }
+        
 
     /**
      * The attributes that should be hidden for serialization.

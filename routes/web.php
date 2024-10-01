@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\OrderItemController;
+use App\Http\Controllers\Admin\ProductSoldController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CartController;
@@ -62,6 +67,7 @@ Route::get('/categories/{id}', [CategoryController::class, 'index'])->name('cate
 Route::get('/filter-categories', [CategoryController::class, 'filter'])->name('filter-categories');
 Route::get('/search-categories', [CategoryController::class, 'search'])->name('search-categories');
 
+
 // Route cho admin
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\HomeController::class, 'index'])->name('dashboard-admin');
@@ -72,4 +78,14 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::resource('users', App\Http\Controllers\Admin\UserController::class, ['names' => 'users']);
 });
 
+Route::get('/dashboard/products', [ProductController::class, 'index'])->name('dashboard.products.index');
+Route::get('/dashboard/product-solds', [ProductSoldController::class, 'index'])->name('dashboard.product-solds.index');
+Route::get('/dashboard/categories', [CategoryController::class, 'index'])->name('dashboard.categories.index');
+Route::get('/dashboard/orders', [OrderController::class, 'index'])->name('dashboard.orders.index');
+Route::get('/dashboard/order-items', [OrderItemController::class, 'index'])->name('dashboard.order-items.index');
+Route::get('/dashboard/users', [UserController::class, 'index'])->name('dashboard.users.index');
+Route::get('/dashboard/blogs', [BlogController::class, 'index'])->name('dashboard.blogs.index');
+Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
 require __DIR__ . '/auth.php';
+

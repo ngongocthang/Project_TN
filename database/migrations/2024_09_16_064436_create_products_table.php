@@ -20,8 +20,13 @@ return new class extends Migration
             $table->double('price');
             $table->string('status')->default('available');
             $table->integer('view')->default(0);
-            $table->unsignedBigInteger('category_id');
-            $table->foreign('category_id')->references('id')->on('categories');
+            // $table->unsignedBigInteger('category_id');
+            // $table->foreign('category_id')->references('id')->on('categories');
+            $table->unsignedBigInteger('category_id')->nullable();
+            $table->foreign('category_id')
+                  ->references('id')
+                  ->on('categories')
+                  ->onDelete('set null');
             $table->timestamps();
         });
     }

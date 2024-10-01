@@ -14,11 +14,21 @@ return new class extends Migration
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
             $table->integer('quantity');
-            $table->double('price');  
-            $table->unsignedBigInteger('product_id');
-            $table->foreign('product_id')->references('id')->on('products');  
-            $table->unsignedBigInteger('order_id');
-            $table->foreign('order_id')->references('id')->on('orders');  
+            $table->double('price');
+            // $table->unsignedBigInteger('product_id');
+            // $table->foreign('product_id')->references('id')->on('products');  
+            // $table->unsignedBigInteger('order_id');
+            // $table->foreign('order_id')->references('id')->on('orders');  
+            $table->unsignedBigInteger('product_id')->nullable();
+            $table->foreign('product_id')
+                ->references('id')
+                ->on('products')
+                ->onDelete('set null'); // Thêm ON DELETE SET NULL
+            $table->unsignedBigInteger('order_id')->nullable();
+            $table->foreign('order_id')
+                ->references('id')
+                ->on('orders')
+                ->onDelete('set null'); // Thêm ON DELETE SET NULL
             $table->timestamps();
         });
     }

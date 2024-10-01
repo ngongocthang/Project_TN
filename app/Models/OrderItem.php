@@ -16,10 +16,10 @@ class OrderItem extends Model
     ];
 
     //relationship 
-    public function orders(){
+    public function order(){
         return $this->belongsTo(Order::class);
     }
-    public function products(){
+    public function product(){
         return $this->belongsTo(Product::class);
     }
 }

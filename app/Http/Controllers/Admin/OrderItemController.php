@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\OrderItem;
-use Illuminate\Http\Request;
 use Throwable;
 
 class OrderItemController extends Controller
@@ -27,7 +26,7 @@ class OrderItemController extends Controller
     /**
      * hien thi 
      */
-    public function show(string $id)
+    public function show($id)
     {
         try {
             $orderItem = OrderItem::findOrFail($id);
