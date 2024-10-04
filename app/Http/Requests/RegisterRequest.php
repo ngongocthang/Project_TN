@@ -23,36 +23,36 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'regex:/^[\pL\s]+$/u', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'thumbnail' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'], // Cập nhật: kiểm tra định dạng ảnh
+            'thumbnail' => 'nullable|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'name' => 'required|regex:/^[A-Za-z\s]+$/|max:45',
+            'email' => 'required|email|max:100|unique:users,email',
+            'password' => 'required|min:8|regex:/^[\S]+$/',
+            'phone' => 'required|numeric',
+            'role' => 'required|string',
         ];
     }
 
-    /**
-     * Get the custom messages for validation errors.
-     */
+
     public function messages()
     {
         return [
-            'name.required' => 'Tên không được để trống.',
-            'name.regex' => 'Tên không được có kí tự đặc biệt hoặc số.',
-            'name.max' => 'Tên không được vượt quá 255 kí tự.',
-
-            'email.required' => 'Email không được để trống.',
-            'email.email' => 'Email không hợp lệ.',
-            'email.max' => 'Email không được vượt quá 255 kí tự.',
-            'email.unique' => 'Email đã tồn tại.',
-
-            'password.required' => 'Mật khẩu không được để trống.',
-            'password.string' => 'Mật khẩu phải là một chuỗi ký tự.',
-            'password.min' => 'Mật khẩu phải có ít nhất 8 kí tự.',
-            'password.confirmed' => 'Xác nhận mật khẩu không khớp.',
-
-            'thumbnail.image' => 'Ảnh đại diện phải là một tệp hình ảnh.',
-            'thumbnail.mimes' => 'Ảnh đại diện phải có định dạng: jpeg, png, jpg, gif.',
-            'thumbnail.max' => 'Ảnh đại diện không được vượt quá 2048 KB.',
+            'thumbnail.image' => 'The uploaded file must be an image!',
+            'thumbnail.mimes' => 'Only image file formats (jpeg, png, jpg, gif, svg) are allowed!',
+            'thumbnail.max' => 'Image must not exceed 2048 characters!',
+            'name.required' => 'Name cannot be empty!',
+            'name.regex' => 'Name can only contain letters!',
+            'name.max' => 'Name must not exceed 45 characters!',
+            'email.required' => 'Email cannot be empty!',
+            'email.email' => 'Email must be in the correct format!',
+            'email.unique' => 'Email has already been used!',
+            'email.max' => 'Email must not exceed 100 characters!',
+            'password.required' => 'Password cannot be empty!',
+            'password.min' => 'Password must be at least 8 characters long!',
+            'password.regex' => 'Password can only contain letters, numbers, and some special characters!',
+            'phone.required' => 'Phone cannot be empty!',
+            'phone.numeric' => 'Phone must be a number!',
+            'role.required' => 'Role cannot be empty!',
+            'role.string' => 'Role must be a string!',
         ];
     }
 }

@@ -86,6 +86,8 @@ Route::get('/dashboard/order-items', [OrderItemController::class, 'index'])->nam
 Route::get('/dashboard/users', [UserController::class, 'index'])->name('dashboard.users.index');
 Route::get('/dashboard/blogs', [BlogController::class, 'index'])->name('dashboard.blogs.index');
 Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+// Route để xóa hình ảnh
+Route::patch('/profile/image/delete', [ProfileController::class, 'deleteImage'])->name('profile.image.delete');
 
 require __DIR__ . '/auth.php';
 

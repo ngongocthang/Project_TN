@@ -1,5 +1,4 @@
 <x-app-layout>
-
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Profile') }}
@@ -12,7 +11,8 @@
                 <div class="col-xl-4">
                     <div class="card">
                         <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                            <img src="{{ Auth::user()->userMeta->thumbnail ? Storage::url(Auth::user()->userMeta->thumbnail) : asset('images/avatar.jpg') }}"
+                            <img id="profileImagePreview"
+                                src="{{ Auth::user()->userMeta->thumbnail ? Storage::url(Auth::user()->userMeta->thumbnail) : asset('images/avatar.jpg') }}"
                                 alt="Profile" class="rounded-circle">
                             <h2>{{ Auth::user()->name }}</h2>
                             <h3>{{ Auth::user()->job }}</h3>
@@ -32,7 +32,6 @@
                 <div class="col-xl-8">
                     <div class="card">
                         <div class="card-body pt-3">
-                            <!-- Bordered Tabs -->
                             <ul class="nav nav-tabs nav-tabs-bordered">
                                 <li class="nav-item">
                                     <button class="nav-link active" data-bs-toggle="tab"
@@ -68,21 +67,25 @@
                                 </div>
 
                                 <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
-                                    <form action="{{ route('profile.update') }}" method="POST">
+                                    <form action="{{ route('profile.update') }}" method="POST"
+                                        enctype="multipart/form-data">
                                         @csrf
                                         @method('patch')
                                         <div class="row mb-3">
                                             <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile
                                                 Image</label>
                                             <div class="col-md-8 col-lg-9">
-                                                <img src="{{ Auth::user()->userMeta->thumbnail ? Storage::url(Auth::user()->userMeta->thumbnail) : asset('images/avatar.jpg') }}"
+                                                <img id="profileImagePreview"
+                                                    src="{{ Auth::user()->userMeta->thumbnail ? Storage::url(Auth::user()->userMeta->thumbnail) : asset('images/avatar.jpg') }}"
                                                     alt="Profile" class="rounded-circle">
                                                 <div class="pt-2">
-                                                    <a href="#" class="btn btn-primary btn-sm"
-                                                        title="Upload new profile image"><i
-                                                            class="bi bi-upload"></i></a>
-                                                    <a href="#" class="btn btn-danger btn-sm"
-                                                        title="Remove my profile image"><i class="bi bi-trash"></i></a>
+                                                    <input type="file" name="thumbnail" id="profileImage"
+                                                        class="form-control" accept="image/*"
+                                                        onchange="previewImage(event)">
+                                                    <a href="{{ route('profile.image.delete') }}"
+                                                        class="btn btn-danger btn-sm" title="Remove my profile image"
+                                                        onclick="return confirm('Bạn có chắc chắn muốn xóa hình ảnh không?');"><i
+                                                            class="bi bi-trash"></i></a>
                                                 </div>
                                             </div>
                                         </div>
@@ -142,4 +145,15 @@
             </div>
         </section>
     </div>
+
+    <script>
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('profileImagePreview');
+                output.src = reader.result;
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
 </x-app-layout>
