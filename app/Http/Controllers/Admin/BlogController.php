@@ -7,7 +7,6 @@ use App\Http\Requests\BlogEditRequest;
 use App\Http\Requests\BlogRequest;
 use App\Models\Blog;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
 
@@ -151,7 +150,7 @@ class BlogController extends Controller
                 $blog->delete();
 
                 toastr()->timeOut(7000)->closeButton()->addSuccess('Blog Delete Successfully!');
-                return redirect()->back();
+                return redirect()->route('dashboard.blogs.index');
             }
             toastr()->timeOut(7000)->closeButton()->addError('Blog Not Found!');
             return redirect()->back();

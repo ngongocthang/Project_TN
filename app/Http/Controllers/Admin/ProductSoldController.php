@@ -20,8 +20,7 @@ class ProductSoldController extends Controller
             $products = Product::where('status', 'sold')->paginate(10);
             return view('admin.products.sold.index', compact('products'));
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -34,8 +33,7 @@ class ProductSoldController extends Controller
             $product = Product::findOrFail($id);
             return view('admin.products.sold.show', compact('product'));
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -49,8 +47,7 @@ class ProductSoldController extends Controller
             $product = Product::findOrFail($id);
             return view('admin.products.sold.edit', compact('product', 'categories'));
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -96,8 +93,7 @@ class ProductSoldController extends Controller
             toastr()->timeOut(7000)->closeButton()->addError('Product Sold Updated Fail!');
             return redirect()->back();
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -110,16 +106,15 @@ class ProductSoldController extends Controller
             $product = Product::findOrFail($id);
 
             if ($product) {
-                $product->orderItems()->delete();
                 $product->delete();
+
                 toastr()->timeOut(7000)->closeButton()->addSuccess('Product Sold Delete Successfully!');
-                return redirect()->back();
+                return redirect()->route('dashboard.product-solds.index');
             }
             toastr()->timeOut(7000)->closeButton()->addError('Product Sold Not Found!');
             return redirect()->back();
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 }

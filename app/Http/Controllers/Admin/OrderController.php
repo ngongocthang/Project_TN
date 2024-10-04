@@ -19,8 +19,7 @@ class OrderController extends Controller
             $orders = Order::paginate(10);
             return view('admin.orders.index', compact('orders'));
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -33,8 +32,7 @@ class OrderController extends Controller
             $order = Order::findOrFail($id);
             return view('admin.orders.show', compact('order'));
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -49,8 +47,7 @@ class OrderController extends Controller
 
             return view('admin.orders.edit', compact('order'));
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -72,8 +69,7 @@ class OrderController extends Controller
             toastr()->timeOut(7000)->closeButton()->addError('Order Updated Fail!');
             return redirect()->back();
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -89,13 +85,12 @@ class OrderController extends Controller
                 $order->delete($id);
 
                 toastr()->timeOut(7000)->closeButton()->addSuccess('Order Delete Successfully!');
-                return redirect()->back();
+                return redirect()->route('dashboard.orders.index');
             }
             toastr()->timeOut(7000)->closeButton()->addError('Order Not Found!');
             return redirect()->back();
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 }

@@ -39,8 +39,9 @@ Route::get('/filter-categories', [CategoryController::class, 'filter'])->name('f
 Route::get('/search-categories', [CategoryController::class, 'search'])->name('search-categories');
 
 // admin
-Route::prefix('dashboard')->group(function () {
+Route::middleware(['checkUrl'])->prefix('dashboard')->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\HomeController::class, 'index'])->name('dashboard');
+    Route::get('/errors', [App\Http\Controllers\Admin\HomeController::class, 'error'])->name('dashboard.error');
     Route::resource('products', App\Http\Controllers\Admin\ProductController::class, ['names' => 'dashboard.products']);
     Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class, ['names' => 'dashboard.categories']);
     Route::resource('orders', App\Http\Controllers\Admin\OrderController::class, ['names' => 'dashboard.orders']);

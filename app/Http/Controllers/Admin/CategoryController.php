@@ -22,8 +22,7 @@ class CategoryController extends Controller
             $categories = Category::paginate(10);
             return view('admin.categories.index', compact('categories'));
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -60,8 +59,7 @@ class CategoryController extends Controller
             toastr()->timeOut(7000)->closeButton()->addError('Category Created Fail!');
             return redirect()->back();
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -74,8 +72,7 @@ class CategoryController extends Controller
             $category = Category::findOrFail($id);
             return view('admin.categories.show', compact('category'));
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -88,8 +85,7 @@ class CategoryController extends Controller
             $category = Category::findOrFail($id);
             return view('admin.categories.edit', compact('category'));
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -124,8 +120,7 @@ class CategoryController extends Controller
             toastr()->timeOut(7000)->closeButton()->addError('Category Updated Fail!');
             return redirect()->back();
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -138,13 +133,12 @@ class CategoryController extends Controller
             $category = Category::destroy($id);
             if ($category) {
                 toastr()->timeOut(7000)->closeButton()->addSuccess('Category Delete Successfully!');
-                return redirect()->back();
+                return redirect()->route('dashboard.categories.index');
             }
             toastr()->timeOut(7000)->closeButton()->addSuccess('Category Delete Fail!');
             return redirect()->back();
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 }

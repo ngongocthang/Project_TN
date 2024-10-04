@@ -7,6 +7,7 @@ use App\Http\Requests\UserEditRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use App\Models\UserMeta;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
 
@@ -22,8 +23,7 @@ class UserController extends Controller
 
             return view('admin.users.index', compact('users'));
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -33,10 +33,14 @@ class UserController extends Controller
     public function create()
     {
         try {
+            //check permissions
+            if (Gate::denies('create', User::class)) {
+                return abort(403, 'Unauthorized');
+            }
+
             return view('admin.users.create');
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -50,7 +54,7 @@ class UserController extends Controller
             $user = User::create($validated);
 
             if ($request->hasFile('thumbnail')) {
-                $imagePath = $request->file('thumbnail')->store('user-meta', 'public');
+                $imagePath = $request->file('thumbnail')->store('user-metas', 'public');
                 UserMeta::create([
                     'thumbnail' => $imagePath,
                     'phone' => $validated['phone'],
@@ -72,8 +76,7 @@ class UserController extends Controller
             toastr()->timeOut(7000)->closeButton()->addError('User Created Fail!');
             return redirect()->back();
         } catch (Throwable $e) {
-            // toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return $e->getMessage();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -86,8 +89,7 @@ class UserController extends Controller
             $user = User::findOrFail($id);
             return view('admin.users.show', compact('user'));
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -101,8 +103,7 @@ class UserController extends Controller
 
             return view('admin.users.edit', compact('user'));
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -117,7 +118,7 @@ class UserController extends Controller
             $userMeta = UserMeta::where('user_id', $id)->firstOrFail();
 
             if ($request->hasFile('thumbnail')) {
-                $imagePath = $request->file('thumbnail')->store('user-meta', 'public');
+                $imagePath = $request->file('thumbnail')->store('user-metas', 'public');
                 if ($userMeta->thumbnail) {
                     Storage::disk('public')->delete($userMeta->thumbnail);
                 }
@@ -140,7 +141,7 @@ class UserController extends Controller
                     'role' => $validated['role']
                 ]);
             }
-            
+
             $userMeta->save();
             $user->update($validated);
             if ($user) {
@@ -150,8 +151,7 @@ class UserController extends Controller
             toastr()->timeOut(7000)->closeButton()->addError('User Updated Fail!');
             return redirect()->back();
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -164,14 +164,14 @@ class UserController extends Controller
             $user = User::findOrFail($id);
             if ($user) {
                 $user->delete();
+
                 toastr()->timeOut(7000)->closeButton()->addSuccess('User Delete Successfully!');
-                return redirect()->back();
+                return redirect()->route('dashboard.users.index');
             }
             toastr()->timeOut(7000)->closeButton()->addError('User Not Found!');
             return redirect()->back();
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 }

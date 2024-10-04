@@ -17,8 +17,7 @@ class OrderItemController extends Controller
             $orderItems = OrderItem::paginate(10);
             return view('admin.orderItems.index', compact('orderItems'));
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 
@@ -32,8 +31,7 @@ class OrderItemController extends Controller
             $orderItem = OrderItem::findOrFail($id);
             return view('admin.orderItems.show', compact('orderItem'));
         } catch (Throwable $e) {
-            toastr()->timeOut(7000)->closeButton()->addError('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
+            return ('An error occurred: ' . $e->getMessage());
         }
     }
 

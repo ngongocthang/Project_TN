@@ -885,6 +885,11 @@ h6 {
   background: #ffecdf;
 }
 
+.dashboard .blogs-card .card-icon {
+  color: rgb(250, 198, 87);
+  background: #f6f6fe;
+}
+
 /* Activity */
 .dashboard .activity {
   font-size: 14px;
