@@ -26,8 +26,8 @@ class UserEditRequest extends FormRequest
             'name' => 'required|regex:/^[A-Za-z\s]+$/|max:45',
             'email' => 'required|email|max:100',
             'password' => 'required|min:8|regex:/^[\S]+$/',
-            'phone' => 'required|numeric',
-            'role' => 'required|string',
+            'phone' => 'required|digits:10|regex:/^[0-9]+$/',
+            'role' => 'required',
             'address' => 'nullable'
         ];
     }
@@ -48,9 +48,9 @@ class UserEditRequest extends FormRequest
             'password.min' => 'Password must be at least 8 characters long!',
             'password.regex' => 'Password can only contain letters, numbers, and some special characters!',
             'phone.required' => 'Phone cannot be empty!',
-            'phone.numeric' => 'Phone must be a number!',
+            'phone.digits' => 'Phone must not exceed 10 characters!',
+            'phone.regex' => 'Phone must be a number!',
             'role.required' => 'Role cannot be empty!',
-            'role.string' => 'Role must be a string!',
         ];
     }
 }
